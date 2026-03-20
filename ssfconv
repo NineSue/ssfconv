@@ -111,22 +111,24 @@ def getImageAvg(image_path, area = (0, 0, 0, 0)):
     
     # 算出区域内所有象素点的平均值
     a = np.asarray(image)
+    # Force Python int accumulation; otherwise numpy uint8 can overflow
+    # during "+=" and later cause OverflowError when dividing.
     r = g = b = 0
     count = 0
     if a.shape[2] == 4:
         for y in range(y1, y2):
             for x in range(x1, x2):
                 if a[y][x][3] > 0:
-                    r += a[y][x][0]
-                    g += a[y][x][1]
-                    b += a[y][x][2]
+                    r += int(a[y][x][0])
+                    g += int(a[y][x][1])
+                    b += int(a[y][x][2])
                     count += 1
     else:
         for y in range(y1, y2):
             for x in range(x1, x2):
-                r += a[y][x][0]
-                g += a[y][x][1]
-                b += a[y][x][2]
+                r += int(a[y][x][0])
+                g += int(a[y][x][1])
+                b += int(a[y][x][2])
                 count += 1
     if count == 0:
         count = 1
